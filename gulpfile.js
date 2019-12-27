@@ -14,20 +14,20 @@ const nodemon = require('gulp-nodemon');
 
 gulp.task('watch', function () {
     return new Promise(function (resolve, reject) {
-        gulp.watch(['./src/app/views/*.html'], ['moveDev']);
-        gulp.watch(['./src/assets/css/*'], ['css']);
-        gulp.watch(['./src/assets/img/*'], ['img']);
-        gulp.watch(['./src/assets/js/*'], ['js']);
-        gulp.watch(['./src/assets/vector/*'], ['vector']);
-        gulp.watch(['./dependencies.json'], ['buildVendorJS']);
+        gulp.watch(['./src/views/*.html'], gulp.series(['moveDev']));
+        gulp.watch(['./src/assets/css/*'], gulp.series(['css']));
+        gulp.watch(['./src/assets/img/*'], gulp.series(['img']));
+        gulp.watch(['./src/assets/js/*'], gulp.series(['js']));
+        gulp.watch(['./src/assets/vector/*'], gulp.series(['vector']));
+        gulp.watch(['./dependencies.json'], gulp.series(['buildVendorJS']));
         resolve();
     });
 });
 
 gulp.task('moveDev', function () {
     return new Promise(function (resolve, reject) {
-        gulp.src(['./src/app/views/*.html'])
-            .pipe(gulp.dest('./artifacts/views/'));
+        gulp.src(['./src/views/*.html'])
+            .pipe(gulp.dest('./dist/views/'));
         gulp.src('./src/assets/img/**/*')
             .pipe(imagemin())
             .pipe(gulp.dest('./dist/img'));
@@ -122,11 +122,13 @@ gulp.task('serve', function (done) {
 gulp.task('buildVendorJS', function () {
     return new Promise(function (resolve, reject) {
         var dependencies = JSON.parse(fs.readFileSync('./dependencies.json'));
-        if(dependencies.scripts.length>0&&dependencies.styles.length>0){
+        if (dependencies.scripts.length > 0 && dependencies.styles.length > 0) {
             gulp.src(dependencies.scripts)
-                .pipe(concat('./dist/all.js'))
+                .pipe(concat('all.js'))
+                .pipe(gulp.dest('./dist/'))
             gulp.src(dependencies.styles)
-                .pipe(concat('./dist/all.css'))
+                .pipe(concat('all.css'))
+                .pipe(gulp.dest('./dist/'))
         }
         resolve();
     });
@@ -134,10 +136,14 @@ gulp.task('buildVendorJS', function () {
 gulp.task('buildVendorJSProd', function () {
     return new Promise(function (resolve, reject) {
         var dependencies = JSON.parse(fs.readFileSync('./dependencies.json'));
-        gulp.src(dependencies.scripts)
-            .pipe(concat('all.js'))
-        gulp.src(dependencies.styles)
-            .pipe(concat('all.css'))
+        if (dependencies.scripts.length > 0 && dependencies.styles.length > 0) {
+            gulp.src(dependencies.scripts)
+                .pipe(concat('all.js'))
+                .pipe(gulp.dest('./dist/'))
+            gulp.src(dependencies.styles)
+                .pipe(concat('all.css'))
+                .pipe(gulp.dest('./dist/'))
+        }
         resolve();
     });
 });
@@ -154,4 +160,4 @@ gulp.task('prod', function () {
 //         resolve();
 //     });
 // });
-exports.build = gulp.series(['moveDev', 'css', 'js', 'vector', 'font', 'buildVendorJS', 'serve', 'watch']);
+exports.build = gulp.series(['moveDev', 'css', 'js', 'vector', 'font', 'buildVendorJS', 'watch', 'serve']);

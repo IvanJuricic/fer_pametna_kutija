@@ -26,8 +26,6 @@ gulp.task('watch', function () {
 
 gulp.task('moveDev', function () {
     return new Promise(function (resolve, reject) {
-        gulp.src(['./src/views/*.html'])
-            .pipe(gulp.dest('./dist/views/'));
         gulp.src('./src/assets/img/**/*')
             .pipe(imagemin())
             .pipe(gulp.dest('./dist/img'));

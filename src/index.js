@@ -1,43 +1,62 @@
 const express = require('express');
 const path = require('path');
-const EventEmitter = require('events');
 const fs = require('fs');
-var tls = require('tls');
+const tls = require('tls');
+const cookieParser = require('cookie-parser');
+const bcrypt = require('bcrypt');
+const UserModel = require('./user');
+const mongoose = require('mongoose');
+const https = require('https')
+
+
+const indexRouter = require('./routes/indexRoutes')();
+const userRouter = require('./routes/userRoutes')();
+
 const app = express();
 
 var bodyParser = require('body-parser');
+app.use(cookieParser());
+
+require('./config/passport.js')(app);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+mongoose.connect("mongodb://127.0.0.1:27017/smart-box");
+
+bcrypt.hash("admin", 10).then(function (passwordHash) {
+  try {
+    const userDocument = new UserModel({ username: "admin", passwordHash, role: "ADMIN" });
+    userDocument.save();
+    console.log("admin user created");
+
+  } catch{
+    console.log("admin user already exists");
+  }
+});
+
+console.log(userRouter);
+
+app.use(('/'), indexRouter);
+app.use(('/user'), userRouter);
 
 app.use(express.static(path.join(__dirname, '/../dist')));
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/views/index.html');
-})
+// app.post('/login', (req, res) => {
+//   const user_name = req.body.user;
+//   const password = req.body.password;
+//   console.log("User name = " + user_name + ", password is " + password);
+//   res.end("yes");
+//   sockets.forEach((element, index) => {
+//     element.emit("unlock");
+//   });
+// });
 
-app.post('/login', (req, res) => {
-  const user_name = req.body.user;
-  const password = req.body.password;
-  console.log("User name = " + user_name + ", password is " + password);
-  res.end("yes");
-  sockets.forEach((element, index) => {
-    element.emit("unlock");
+https.createServer({
+  key: fs.readFileSync(__dirname + '/server.key'),
+  cert: fs.readFileSync(__dirname + '/server.cert')
+}, app)
+  .listen(8000, function () {
+    console.log('Example app listening on port 8000! Go to https://localhost:8000/')
   });
-});
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-})
-
-app.post('/login', (req, res) => {
-  const user_name = req.body.user;
-  const password = req.body.password;
-  console.log("User name = " + user_name + ", password is " + password);
-  res.end("yes");
-})
-
-app.listen(8000, () => {
-  console.log('Example app listening on port 8000!')
-});
 
 var options = {
   key: fs.readFileSync(__dirname + '/private-key.pem'),
@@ -45,7 +64,7 @@ var options = {
 };
 
 const PORT = 1337;
-const HOST = '192.168.8.104'
+const HOST = '192.168.5.18'
 sockets = [];
 
 tlsServer = tls.createServer(options, function (socket) {

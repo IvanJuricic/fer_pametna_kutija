@@ -4,8 +4,7 @@ const fs = require('fs');
 const tls = require('tls');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
-const UserModel = require('./user');
-const mongoose = require('mongoose');
+const UserModel = require('./models/user');
 const https = require('https')
 
 
@@ -20,7 +19,7 @@ app.use(cookieParser());
 require('./config/passport.js')(app);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-mongoose.connect("mongodb://127.0.0.1:27017/smart-box");
+require('./config/mongoose')();
 
 bcrypt.hash("admin", 10).then(function (passwordHash) {
   try {

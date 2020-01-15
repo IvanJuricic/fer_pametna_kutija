@@ -39,9 +39,10 @@
         </div>
     </nav>
     <h1>Admin</h1>
-    <mdt-table paginated-rows="{isEnabled: true, rowsPerPageValues: [5,10,20,50]}"
-        mdt-row-paginator="paginatorCallback(page, pageSize)"
-        mdt-row-paginator-error-message="Error happened during loading nutritions." mdt-row="{
+    <div style="margin: 15px; width: 60%;">
+        <mdt-table paginated-rows="{isEnabled: true, rowsPerPageValues: [5,10,20,50]}"
+            mdt-row-paginator="paginatorCallback(page, pageSize)"
+            mdt-row-paginator-error-message="Error happened during loading nutritions." mdt-row="{
             'table-row-id-key': 'fields.id',
             'column-keys': [
                 'username',
@@ -50,20 +51,48 @@
                 'save'
             ],
         }">
-        <mdt-header-row>
-            <mdt-column align-rule="left">Username</mdt-column>
-            <mdt-column align-rule="right">Role</mdt-column>
-            <mdt-column align-rule="right">RFID</mdt-column>
-            <mdt-column align-rule="right">Save</mdt-column>
-        </mdt-header-row>
-        <mdt-custom-cell column-key="rfid">
-            <input value="{{value}}">
-        </mdt-custom-cell>
-        <mdt-custom-cell column-key="save">
-                <md-button ng-transclude="string" class="md-raised">bla</md-button>
-        </mdt-custom-cell>
+            <mdt-header-row>
+                <mdt-column align-rule="left">Username</mdt-column>
+                <mdt-column align-rule="right">Role</mdt-column>
+                <mdt-column align-rule="right">RFID</mdt-column>
+                <mdt-column align-rule="right">Save</mdt-column>
+            </mdt-header-row>
+            <mdt-custom-cell column-key="rfid">
+                <input value="{{value}}">
+            </mdt-custom-cell>
+            <mdt-custom-cell column-key="save">
+                <button style="margin-right: 0px;" class="md-button md-raised md-warn">Save</button>
+            </mdt-custom-cell>
 
-    </mdt-table>
+        </mdt-table>
+    </div>
+    <div style="margin: 15px; width: 60%;">
+        <mdt-table paginated-rows="{isEnabled: true, rowsPerPageValues: [5,10,20,50]}"
+            mdt-row-paginator="paginatorCallback(page, pageSize)"
+            mdt-row-paginator-error-message="Error happened during loading nutritions." mdt-row="{
+            'table-row-id-key': 'fields.id',
+            'column-keys': [
+                'username',
+                'role',
+                'rfid',
+                'save'
+            ],
+        }">
+            <mdt-header-row>
+                <mdt-column align-rule="left">Username</mdt-column>
+                <mdt-column align-rule="right">Role</mdt-column>
+                <mdt-column align-rule="right">RFID</mdt-column>
+                <mdt-column align-rule="right">Save</mdt-column>
+            </mdt-header-row>
+            <mdt-custom-cell column-key="rfid">
+                <input value="{{value}}">
+            </mdt-custom-cell>
+            <mdt-custom-cell column-key="save">
+                <button style="margin-right: 0px;" class="md-button md-raised md-warn">Save</button>
+            </mdt-custom-cell>
+
+        </mdt-table>
+    </div>
 </body>
 
 </html>

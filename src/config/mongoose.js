@@ -5,6 +5,7 @@ module.exports = function () {
         useNewUrlParser: true,
         useCreateIndex: true,
         useUnifiedTopology: true
-    })
+    });
+    return mongoose;
 
 }

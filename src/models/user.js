@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
@@ -8,6 +9,12 @@ const userSchema = new Schema({
     unique: true,
     dropDups: true,
     required: true,
+    trim: true,
+    validate(value) {
+      if (!validator.isEmail(value)) {
+        throw new Error('Email is invalid')
+      }
+    }
   },
   passwordHash: { //salted and hashed using bcrypt
     type: String,
@@ -27,7 +34,11 @@ const userSchema = new Schema({
     type: String,
     enum: ['ADMIN', 'USER'],
     default: 'USER',
-  }
+  },
+  RFID: {
+    type: Schema.Types.ObjectId,
+    ref: 'RFID'
+  },
 });
 
 const User = mongoose.model('User', userSchema);

@@ -5,7 +5,7 @@ const path = require('path');
 var userController = function () {
     var getUser = function (req, res) {
         passport.authenticate('jwt', { session: false }, function (err, user, role) {
-            if (err) { return next(err); }
+            if (err) { return res.send(err); }
             // Redirect if it fails
             if (!user) { return res.redirect('/login'); }
             switch (role) {

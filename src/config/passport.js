@@ -8,7 +8,6 @@ const JWTStrategy = passportJWT.Strategy;
 
 var cookieExtractor = function (req) {
     var token = null;
-    console.log(req.cookies);
     if (req && req.cookies) {
         token = req.cookies['jwt'];
     }
@@ -27,8 +26,6 @@ module.exports = function (app) {
             const passwordsMatch = await bcrypt.compare(password, userDocument.passwordHash);
 
             if (passwordsMatch) {
-                console.log(userDocument)
-                console.log("userDocument")
                 return done(null, userDocument);
             } else {
                 return done('Incorrect Username / Password');
@@ -43,7 +40,6 @@ module.exports = function (app) {
         secretOrKey: keys.secret,
     },
         async (jwtPayload, done) => {
-            console.log(jwtPayload);
             if (Date.now() > jwtPayload.expires) {
                 return done('jwt expired');
             }

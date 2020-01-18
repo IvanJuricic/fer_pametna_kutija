@@ -12,24 +12,41 @@ var indexController = function () {
     };
 
     var postRegister = async function (req, res) {
-        const { username, password } = req.body;
 
-        // authentication will take approximately 13 seconds
-        // https://pthree.org/wp-content/uploads/2016/06/bcrypt.png
-        const hashCost = 10;
 
-        try {
-            const passwordHash = await bcrypt.hash(password, hashCost);
-            const userDocument = new UserModel({ username, passwordHash });
-            await userDocument.save();
+        passport.authenticate('jwt', { session: false }, async function (err, user, role) {
+            if (err) { return next(err); }
+            // Redirect if it fails
+            if (!user) { return res.redirect('/login'); }
+            switch (role) {
+                case 'ADMIN':
+                    const { username, password } = req.body;
 
-            res.redirect('/login');
+                    // authentication will take approximately 13 seconds
+                    // https://pthree.org/wp-content/uploads/2016/06/bcrypt.png
+                    const hashCost = 10;
 
-        } catch (error) {
-            res.status(400).send({
-                error: 'req body should take the form { username, password }',
-            });
-        }
+                    try {
+                        const passwordHash = await bcrypt.hash(password, hashCost);
+                        const userDocument = new UserModel({ username, passwordHash });
+                        await userDocument.save();
+
+                        return res.redirect('/user');
+
+                    } catch (error) {
+                        console.log(error)
+                        return res.status(400).send({
+                            error: error.errmsg,
+                        });
+                    }
+                case 'USER':
+                    return res.status(401).send('unauthorised');
+                default:
+                    break;
+            }
+
+        })(req, res);
+
     };
 
     var getLogin = function (req, res) {
@@ -37,14 +54,16 @@ var indexController = function () {
     };
 
     var postLogin = function (req, res) {
-        const { username, password } = req.body;
         passport.authenticate(
             'local',
             { session: false },
             (error, user) => {
-                if (error || !user) {
-                    console.log(error);
-                    res.redirect('/login');
+                if (error) {
+                     res.status(400).send({ error });;
+                     return;
+                }
+                if (!user) {
+                    res.status(400).send("Wrong username or password");
                     return;
                 }
                 const payload = {
@@ -64,7 +83,7 @@ var indexController = function () {
 
                     /** assign our jwt to the cookie */
                     res.cookie('jwt', token, { httpOnly: true, secure: true });
-                    return res.redirect('/user');
+                    return res.status(200).send("authenticated");
                 });
             },
         )(req, res);

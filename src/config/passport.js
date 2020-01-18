@@ -23,6 +23,8 @@ module.exports = function (app) {
     passport.use(new LocalStrategy(async (username, password, done) => {
         try {
             const userDocument = await UserModel.findOne({ username: username }).exec();
+            if (userDocument == null)
+                return done('Incorrect Username / Password');
             const passwordsMatch = await bcrypt.compare(password, userDocument.passwordHash);
 
             if (passwordsMatch) {

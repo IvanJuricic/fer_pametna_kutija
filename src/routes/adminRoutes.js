@@ -9,7 +9,9 @@ var router = function (mongoose) {
     adminRouter.route('/getUsers')
         .post(adminController.getUsers);
     adminRouter.route('/getAllRFIDs')
-        .get(adminController.getAllRFIDs);
+        .post(adminController.getAllRFIDs);
+    adminRouter.route('/updateUserID')
+        .post(adminController.updateUserID);
     return adminRouter;
 };
 

@@ -4,8 +4,8 @@ const fs = require('fs');
 const tls = require('tls');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
-const UserModel = require('./models/user');
 const RFIDModel = require('./models/rfid');
+const UserModel = require('./models/user');
 const https = require('https')
 
 
@@ -75,7 +75,7 @@ var options = {
 };
 
 const PORT = 1337;
-const HOST = '10.129.139.6'
+const HOST = '192.168.43.134'
 sockets = [];
 
 tlsServer = tls.createServer(options, function (socket) {

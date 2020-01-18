@@ -38,60 +38,89 @@
             </ul>
         </div>
     </nav>
-    <h1>Admin</h1>
-    <div style="margin: 15px; width: 60%;">
-        <mdt-table paginated-rows="{isEnabled: true, rowsPerPageValues: [5,10,20,50]}"
-            mdt-row-paginator="paginatorCallback(page, pageSize)"
-            mdt-row-paginator-error-message="Error happened during loading nutritions." mdt-row="{
-            'table-row-id-key': 'fields.id',
-            'column-keys': [
-                'username',
-                'role',
-                'rfid',
-                'save'
-            ],
-        }">
-            <mdt-header-row>
-                <mdt-column align-rule="left">Username</mdt-column>
-                <mdt-column align-rule="right">Role</mdt-column>
-                <mdt-column align-rule="right">RFID</mdt-column>
-                <mdt-column align-rule="right">Save</mdt-column>
-            </mdt-header-row>
-            <mdt-custom-cell column-key="rfid">
-                <input value="{{value}}">
-            </mdt-custom-cell>
-            <mdt-custom-cell column-key="save">
-                <button style="margin-right: 0px;" class="md-button md-raised md-warn">Save</button>
-            </mdt-custom-cell>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 col-xl-7">
 
-        </mdt-table>
-    </div>
-    <div style="margin: 15px; width: 60%;">
-        <mdt-table paginated-rows="{isEnabled: true, rowsPerPageValues: [5,10,20,50]}"
-            mdt-row-paginator="paginatorCallback(page, pageSize)"
-            mdt-row-paginator-error-message="Error happened during loading nutritions." mdt-row="{
-            'table-row-id-key': 'fields.id',
-            'column-keys': [
-                'username',
-                'role',
-                'rfid',
-                'save'
-            ],
-        }">
-            <mdt-header-row>
-                <mdt-column align-rule="left">Username</mdt-column>
-                <mdt-column align-rule="right">Role</mdt-column>
-                <mdt-column align-rule="right">RFID</mdt-column>
-                <mdt-column align-rule="right">Save</mdt-column>
-            </mdt-header-row>
-            <mdt-custom-cell column-key="rfid">
-                <input value="{{value}}">
-            </mdt-custom-cell>
-            <mdt-custom-cell column-key="save">
-                <button style="margin-right: 0px;" class="md-button md-raised md-warn">Save</button>
-            </mdt-custom-cell>
+                <div style="margin-top: 15px;" class="row">
+                    <div class="col-12">
+                        <h1>Admin</h1>
+                    </div>
+                </div>
+                <div style="margin-top: 15px;">
+                    <mdt-table paginated-rows="{isEnabled: true, rowsPerPageValues: [5,10,20,50]}"
+                        mdt-row-paginator="userCallback(page, pageSize)"
+                        mdt-row-paginator-error-message="Error happened during loading nutritions." mdt-row="{
+                                'table-row-id-key': '_id',
+                                'column-keys': [
+                                    'username',
+                                    'role',
+                                    'RFID.RFID',
+                                    'save'
+                                ],
+                            }">
+                        <mdt-header-row>
+                            <mdt-column align-rule="left">Username</mdt-column>
+                            <mdt-column align-rule="right">Role</mdt-column>
+                            <mdt-column align-rule="right">RFID</mdt-column>
+                            <mdt-column align-rule="right">Save</mdt-column>
+                        </mdt-header-row>
+                        <mdt-custom-cell html-content="true" column-key="RFID.RFID">
+                            <input id="{{rowId}}" value="{{value}}">
+                        </mdt-custom-cell>
+                        <mdt-custom-cell column-key="save">
+                            <button style="margin-right: 0px;" ng-click="clientScope.showConfirm(rowId)"
+                                class="md-button md-raised md-primary">Save</button>
+                        </mdt-custom-cell>
+                    </mdt-table>
+                </div>
+                <div style="margin-top: 15px;">
+                    <mdt-table paginated-rows="{isEnabled: true, rowsPerPageValues: [5,10,20,50]}"
+                        mdt-row-paginator="rfidCallback(page, pageSize)"
+                        mdt-row-paginator-error-message="Error happened during loading nutritions." mdt-row="{
+                                        'table-row-id-key': 'fields.id',
+                                        'column-keys': [
+                                            'RFID',
+                                            'created_at'
+                                        ],
+                                    }">
+                        <mdt-header-row>
+                            <mdt-column align-rule="left">RFID</mdt-column>
+                            <mdt-column align-rule="right">Created at</mdt-column>
+                        </mdt-header-row>
 
-        </mdt-table>
+                    </mdt-table>
+                </div>
+            </div>
+            <div style="margin-top: 15px;" class="col-12 col-xl-5">
+                <h1>Create user:</h1>
+                <form name="createUserForm" style="margin: 0 auto;">
+                    <md-input-container style="width: 95%;margin-left: 15px;margin-right: 15px;">
+                        <label>Username</label>
+                        <input type="text" id="username" required minlength="10" maxlength="100"
+                            ng-pattern="/^.+@.+\..+$/" name="username" size="40" ng-model="user.email">
+                        <div ng-messages="createUserForm.username.$error" role="alert">
+                            <div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
+                                Email must be between 10 and 100 characters long and look like an e-mail address.
+                            </div>
+                        </div>
+                    </md-input-container>
+                    <br>
+                    <md-input-container style="width: 95%;margin-left: 15px;margin-right: 15px;">
+                        <label>Password</label>
+                        <input type="password" id="password" required minlength="5" ng-model="user.password" name="password"
+                            size="40"><br>
+                        <div ng-messages="createUserForm.password.$error" role="alert">
+                            <div ng-message-exp="['required', 'minlength']">
+                                Password must be at least 5 characters long.
+                            </div>
+                        </div>
+                    </md-input-container>
+                    <br>
+                    <button style="margin-left: 15px;" class="md-button md-raised md-primary" ng-disabled="createUserForm.$invalid" ng-click="createUser()" >Submit</button>
+                </form>
+            </div>
+        </div>
     </div>
 </body>
 

@@ -35,10 +35,7 @@ const userSchema = new Schema({
     enum: ['ADMIN', 'USER'],
     default: 'USER',
   },
-  RFID: {
-    type: Schema.Types.ObjectId,
-    ref: 'RFID'
-  },
+  RFID: mongoose.model('RFID').schema,
 });
 
 const User = mongoose.model('User', userSchema);

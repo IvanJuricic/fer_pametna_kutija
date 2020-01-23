@@ -9,6 +9,10 @@ const RFIDSchema = new Schema({
         dropDups: true,
         required: true,
     },
+    authorised:{
+        type: Boolean,
+        default: false
+    }
 }, { timestamps: { createdAt: 'created_at' } });
 
 const RFID = mongoose.model('RFID', RFIDSchema);

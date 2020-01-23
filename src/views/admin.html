@@ -88,18 +88,24 @@
                                         'column-keys': [
                                             'RFID',
                                             'created_at',
+                                            'authorised',
                                             'delete'
                                         ],
                                     }">
                         <mdt-header-row>
                             <mdt-column align-rule="left">RFID</mdt-column>
                             <mdt-column align-rule="right">Created at</mdt-column>
+                            <mdt-column align-rule="right">Authorised</mdt-column>
                             <mdt-column align-rule="right">Delete</mdt-column>
                         </mdt-header-row>
                         <mdt-custom-cell column-key="delete">
                             <button style="margin-right: 0px;" ng-click="clientScope.showConfirmDeleteRFID(rowId)"
                                 class="md-button md-raised md-primary">Delete</button>
                         </mdt-custom-cell>
+                        <mdt-custom-cell column-key="authorised">
+                            {{value.toString()}}
+                        </mdt-custom-cell>
+
 
                     </mdt-table>
                 </div>

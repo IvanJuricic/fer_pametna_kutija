@@ -52,7 +52,7 @@ var adminController = function (mongoose, sockets) {
             switch (user.role) {
                 case 'ADMIN':
                     totalRFIDs = await rfidModel.find({}, { RFID: 1, created_at: 1 });
-                    rfids = await rfidModel.find({}, { RFID: 1, created_at: 1 }).skip(req.body.offset).limit(req.body.limit);
+                    rfids = await rfidModel.find({}, { RFID: 1, created_at: 1, authorised: 1 }).skip(req.body.offset).limit(req.body.limit);
                     return res.status(200).send({ rfids, count: totalRFIDs.length });
                 case 'USER':
                     return res.status(401).send('unauthorised');
@@ -66,6 +66,7 @@ var adminController = function (mongoose, sockets) {
     var deleteUser = function (req, res) {
         passport.authenticate('jwt', { session: false }, async function (err, userFound, user) {
             let userModel = mongoose.model('User');
+            let rfidModel = mongoose.model('RFID');
 
             if (err) { return next(err); }
             // Redirect if it fails
@@ -80,10 +81,17 @@ var adminController = function (mongoose, sockets) {
                         if (user._id.toString() != userToUpdate._id.toString()) {
                             var updated = await userModel.findOneAndDelete({ _id: req.body.id });
                             if (updated != null) {
-                                if (userToUpdate.RFID != null) {
-                                    if (sockets.length > 1)
-                                        sockets.shift();
-                                    sockets[0].emit("remove", [{ RFID: userToUpdate.RFID.RFID }]);
+                                updated = await rfidModel.updateOne({ RFID: userToUpdate.RFID.RFID }, { authorised: false });
+                                if (updated.n == 1) {
+                                    if (userToUpdate.RFID != null) {
+                                        if (sockets.length > 1)
+                                            sockets.shift();
+
+                                        let rfids = await rfidModel.find({ authorised: true }, { RFID: 1 });
+                                        console.log(rfids);
+                                        sockets[0].emit("file", rfids);
+                                        //sockets[0].emit("remove", [{ RFID: userToUpdate.RFID.RFID }]);
+                                    }
                                 }
                             }
                             return res.status(200).send('success');
@@ -123,7 +131,11 @@ var adminController = function (mongoose, sockets) {
                             if (updated != null) {
                                 if (sockets.length > 1)
                                     sockets.shift();
-                                sockets[0].emit("remove", [{ RFID: rfid.RFID }]);
+
+                                let rfids = await rfidModel.find({ authorised: true }, { RFID: 1 });
+                                console.log(rfids);
+                                sockets[0].emit("file", rfids);
+                                //sockets[0].emit("remove", [{ RFID: rfid.RFID }]);
                             }
                         }
 
@@ -159,12 +171,20 @@ var adminController = function (mongoose, sockets) {
 
                         var updated = await userModel.updateOne({ _id: req.body.id }, { RFID: rfid });
                         if (updated.n == 1) {
-                            if (sockets.length > 1)
-                                sockets.shift();
-                            if (userToUpdate.RFID != null) {
-                                sockets[0].emit("update", [{ oldRFID: userToUpdate.RFID.RFID, RFID: rfid.RFID }]);
-                            } else {
-                                sockets[0].emit("add", [{ RFID: rfid.RFID }]);
+                            updated = await rfidModel.updateOne({ RFID: rfid.RFID }, { authorised: true });
+                            if (updated.n == 1) {
+                                if (sockets.length > 1)
+                                    sockets.shift();
+                                // if (userToUpdate.RFID != null) {
+                                //     let rfids = await rfidModel.find({ authorised: true }, { RFID: 1 });
+                                //     console.log(rfids);
+                                //     sockets[0].emit("update", [{ oldRFID: userToUpdate.RFID.RFID, RFID: rfid.RFID }]);
+                                // } else {
+                                //     sockets[0].emit("add", [{ RFID: rfid.RFID }]);
+                                // }
+
+                                let rfids = await rfidModel.find({ authorised: true }, { RFID: 1 });
+                                sockets[0].emit("file", rfids);
                             }
 
                         }

@@ -20,16 +20,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 const mongoose = require('./config/mongoose')();
 
-// bcrypt.hash("admin", 10).then(function (passwordHash) {
-//   try {
-//     const userDocument = new UserModel({ username: "admin@admin.com", passwordHash, role: "ADMIN" });
-//     userDocument.save();
-//     console.log("admin user created");
+bcrypt.hash("admin", 10).then(function (passwordHash) {
+  try {
+    const userDocument = new UserModel({ username: "admin@admin.com", passwordHash, role: "ADMIN" });
+    userDocument.save();
+    console.log("admin user created");
 
-//   } catch{
-//     console.log("admin user already exists");
-//   }
-// });
+  } catch{
+    console.log("admin user already exists");
+  }
+});
 
 
 
@@ -111,6 +111,19 @@ tlsServer = tls.createServer(options, function (socket) {
     message.type = 3;
     message.RFID_old = args[0].oldRFID;
     message.RFID = args[0].RFID;
+    socket.write(JSON.stringify(message));
+    console.log(JSON.stringify(message));
+  });
+  
+  socket.on('file', function (args) {
+    let message = {};
+    message.type = 6;
+    message.file="";
+    console.log(args);
+    args.forEach(RFID => {
+      message.file+=RFID.RFID;
+    });
+    message.length=message.file.length;
     socket.write(JSON.stringify(message));
     console.log(JSON.stringify(message));
   });

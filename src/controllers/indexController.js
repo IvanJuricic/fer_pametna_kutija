@@ -7,9 +7,6 @@ const keys = require('../config/keys');
 const path = require('path');
 
 var indexController = function () {
-    var getRegister = function (req, res) {
-        res.sendFile(path.join(__dirname, '/../views/register.html'));
-    };
 
     var postRegister = async function (req, res) {
 
@@ -97,7 +94,6 @@ var indexController = function () {
         postLogin: postLogin,
         getLogin: getLogin,
         postRegister: postRegister,
-        getRegister: getRegister,
         getIndex: getIndex,
     };
 };

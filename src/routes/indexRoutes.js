@@ -6,8 +6,6 @@ var indexController = require('../controllers/indexController')();
 
 var router = function () {
     indexRouter.route('/register')
-        .get(indexController.getRegister);
-    indexRouter.route('/register')
         .post(indexController.postRegister);
     indexRouter.route('/login')
         .get(indexController.getLogin);

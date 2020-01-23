@@ -84,9 +84,6 @@ var adminController = function (mongoose, sockets) {
                                 updated = await rfidModel.updateOne({ RFID: userToUpdate.RFID.RFID }, { authorised: false });
                                 if (updated.n == 1) {
                                     if (userToUpdate.RFID != null) {
-                                        if (sockets.length > 1)
-                                            sockets.shift();
-
                                         let rfids = await rfidModel.find({ authorised: true }, { RFID: 1 });
                                         console.log(rfids);
                                         sockets[0].emit("file", rfids);
@@ -129,8 +126,6 @@ var adminController = function (mongoose, sockets) {
                         if (updated != null) {
                             var updated = await userModel.findOneAndUpdate({ "RFID.RFID": rfid.RFID }, { RFID: null });
                             if (updated != null) {
-                                if (sockets.length > 1)
-                                    sockets.shift();
 
                                 let rfids = await rfidModel.find({ authorised: true }, { RFID: 1 });
                                 console.log(rfids);
@@ -173,8 +168,6 @@ var adminController = function (mongoose, sockets) {
                         if (updated.n == 1) {
                             updated = await rfidModel.updateOne({ RFID: rfid.RFID }, { authorised: true });
                             if (updated.n == 1) {
-                                if (sockets.length > 1)
-                                    sockets.shift();
                                 // if (userToUpdate.RFID != null) {
                                 //     let rfids = await rfidModel.find({ authorised: true }, { RFID: 1 });
                                 //     console.log(rfids);

@@ -20,25 +20,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 const mongoose = require('./config/mongoose')();
 
-bcrypt.hash("admin", 10).then(function (passwordHash) {
-  try {
-    const userDocument = new UserModel({ username: "admin@admin.com", passwordHash, role: "ADMIN" });
-    userDocument.save();
-    console.log("admin user created");
+// bcrypt.hash("admin", 10).then(function (passwordHash) {
+//   try {
+//     const userDocument = new UserModel({ username: "admin@admin.com", passwordHash, role: "ADMIN" });
+//     userDocument.save();
+//     console.log("admin user created");
 
-  } catch{
-    console.log("admin user already exists");
-  }
-});
+//   } catch{
+//     console.log("admin user already exists");
+//   }
+// });
 
 
-
-// const RFID1 = new RFIDModel({ RFID: "1234567891" });
-// RFID1.save();
-// const RFID2 = new RFIDModel({ RFID: "1234567892" });
-// RFID2.save();
-// const RFID3 = new RFIDModel({ RFID: "12345678913" });
-// RFID3.save();
 
 sockets = [];
 
@@ -51,16 +44,6 @@ app.use(('/user'), userRouter);
 app.use(('/admin'), adminRouter);
 
 app.use(express.static(path.join(__dirname, '/../dist')));
-
-// app.post('/login', (req, res) => {
-//   const user_name = req.body.user;
-//   const password = req.body.password;
-//   console.log("User name = " + user_name + ", password is " + password);
-//   res.end("yes");
-//   sockets.forEach((element, index) => {
-//     element.emit("unlock");
-//   });
-// });
 
 https.createServer({
   key: fs.readFileSync(__dirname + '/server.key'),
@@ -150,7 +133,6 @@ tlsServer = tls.createServer(options, function (socket) {
 
   });
   socket.on('error', function () {
-    sockets.shift();
     socket.removeAllListeners("unlock");
     socket.destroy();
   });

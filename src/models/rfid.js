@@ -4,6 +4,7 @@ const { Schema } = mongoose;
 const RFIDSchema = new Schema({
     RFID: {
         type: String,
+        sparse: true,
         unique: true,
         dropDups: true,
         required: true,

@@ -40,10 +40,11 @@ const mongoose = require('./config/mongoose')();
 // const RFID3 = new RFIDModel({ RFID: "12345678913" });
 // RFID3.save();
 
+sockets = [];
 
 const indexRouter = require('./routes/indexRoutes')();
 const userRouter = require('./routes/userRoutes')();
-const adminRouter = require('./routes/adminRoutes')(mongoose);
+const adminRouter = require('./routes/adminRoutes')(mongoose, sockets);
 
 app.use(('/'), indexRouter);
 app.use(('/user'), userRouter);
@@ -76,29 +77,67 @@ var options = {
 
 const PORT = 1337;
 const HOST = '192.168.43.134'
-sockets = [];
 
 tlsServer = tls.createServer(options, function (socket) {
   sockets.push(socket);
-
+  socket.setTimeout(4000);
+  socket.on('timeout', () => {
+    socket.end();
+    sockets.shift();
+  });
 
   socket.on('unlock', function () {
-    console.log("sock");
     socket.write("unlock");
   });
 
+  socket.on('remove', function (args) {
+    let message = {};
+    message.type = 2;
+    message.RFID = args[0].RFID;
+    socket.write(JSON.stringify(message));
+    console.log("remove");
+  });
+
+  socket.on('add', function (args) {
+    let message = {};
+    message.type = 1;
+    message.RFID = args[0].RFID;
+    socket.write(JSON.stringify(message));
+    console.log("add");
+  });
+
+  socket.on('update', function (args) {
+    let message = {};
+    message.type = 3;
+    message.RFID_old = args[0].oldRFID;
+    message.RFID = args[0].RFID;
+    socket.write(JSON.stringify(message));
+    console.log(JSON.stringify(message));
+  });
+
   socket.on('data', function (data) {
-    data = data.toString().replace(/(\n)/gm, "")
-    console.log('Server Received: %s [it is %d bytes long]',
-      data,
-      data.length);
-    if (data == '15') {
-      socket.emit('unlock');
+    data = data.toString().replace(/(\n)/gm, "");
+    try {
+      data = JSON.parse(data);
+
+      switch (data.type) {
+        case "NEW":
+          let RFID = new RFIDModel({ RFID: data.value });
+          RFID.save();
+          break;
+        case "DATA":
+          console.log(data);
+          break;
+        default:
+          break;
+      }
+
+    } catch (error) {
     }
 
   });
   socket.on('error', function () {
-    console.log(socket)
+    sockets.shift();
     socket.removeAllListeners("unlock");
     socket.destroy();
   });
@@ -113,8 +152,6 @@ tlsServer.listen(PORT, HOST, function () {
 
 // When an error occurs, show it.
 tlsServer.on('error', function (error) {
-
-  console.error(error);
 
   // Close the connection after the error occurred.
   tlsServer.close(function (error) {

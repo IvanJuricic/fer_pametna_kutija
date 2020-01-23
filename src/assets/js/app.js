@@ -13,10 +13,12 @@ app.directive('mdtCustomCellButton', function () {
     };
 });
 
-app.controller('AdminController', function AdminController($scope, $http, $mdToast, $mdDialog) {
+app.controller('AdminController', function AdminController($scope, $http, $mdToast, $mdDialog, $window) {
     $scope.userCallback = userCallback;
     $scope.rfidCallback = rfidCallback;
-    $scope.showConfirm = showConfirm;
+    $scope.showConfirmSave = showConfirmSave;
+    $scope.showConfirmDeleteUser = showConfirmDeleteUser;
+    $scope.showConfirmDeleteRFID = showConfirmDeleteRFID;
     $scope.createUser = createUser;
     $scope.user = {
         email: "",
@@ -47,9 +49,8 @@ app.controller('AdminController', function AdminController($scope, $http, $mdToa
             'rfid': currentElement[0].value,
             'id': rowID,
         }).then(function (result) {
-            return {
-                results: result.data.users,
-                totalResultCount: result.data.count
+            if (result.data == "success") {
+                $window.location.reload();
             }
         }, function (err) {
             var toastSettings = $mdToast.simple().content(err.data).position("bottom right");
@@ -79,7 +80,10 @@ app.controller('AdminController', function AdminController($scope, $http, $mdToa
         $http.post(baseURL + "/register/", {
             'username': $scope.user.email,
             'password': $scope.user.password,
-        }).then(function () {
+        }).then(function (result) {
+            if (result.data == "success") {
+                $window.location.reload();
+            }
         }, function (err) {
             var toastSettings = $mdToast.simple().content(err.data).position("bottom right");
             $mdToast.show(toastSettings);
@@ -90,7 +94,7 @@ app.controller('AdminController', function AdminController($scope, $http, $mdToa
         };
     }
 
-    function showConfirm(rowID) {
+    function showConfirmSave(rowID) {
         // Appending dialog to document.body to cover sidenav in docs app
         var confirm = $mdDialog.confirm()
             .title('Are you sure you want to update the user RFID?')
@@ -102,6 +106,58 @@ app.controller('AdminController', function AdminController($scope, $http, $mdToa
         }, function () {
         });
     };
+    function showConfirmDeleteUser(rowID) {
+        // Appending dialog to document.body to cover sidenav in docs app
+        var confirm = $mdDialog.confirm()
+            .title('Are you sure you want to delete the user?')
+            .ok('Yes')
+            .cancel('No');
+
+        $mdDialog.show(confirm).then(function () {
+            deleteUser(rowID);
+        }, function () {
+        });
+    };
+    function showConfirmDeleteRFID(rowID) {
+        // Appending dialog to document.body to cover sidenav in docs app
+        var confirm = $mdDialog.confirm()
+            .title('Are you sure you want to delete the RFID?')
+            .ok('Yes')
+            .cancel('No');
+
+        $mdDialog.show(confirm).then(function () {
+            deleteRFID(rowID);
+        }, function () {
+        });
+    };
+
+    function deleteRFID(rowID) {
+        var currentElement = angular.element('#' + rowID);
+        $http.post(baseURL + "/admin/deleteRFID", {
+            'id': rowID,
+        }).then(function (result) {
+            if (result.data == "success") {
+                $window.location.reload();
+            }
+        }, function (err) {
+            var toastSettings = $mdToast.simple().content(err.data).position("bottom right");
+            $mdToast.show(toastSettings);
+        });;
+    }
+
+    function deleteUser(rowID) {
+        var currentElement = angular.element('#' + rowID);
+        $http.post(baseURL + "/admin/deleteUser", {
+            'id': rowID,
+        }).then(function (result) {
+            if (result.data == "success") {
+                $window.location.reload();
+            }
+        }, function (err) {
+            var toastSettings = $mdToast.simple().content(err.data).position("bottom right");
+            $mdToast.show(toastSettings);
+        });;
+    }
 });
 app.controller('LoginController', function AdminController($scope, $http, $mdToast, $window) {
     $scope.loginUser = loginUser;

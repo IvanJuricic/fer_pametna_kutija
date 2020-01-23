@@ -56,7 +56,8 @@
                                     'username',
                                     'role',
                                     'RFID.RFID',
-                                    'save'
+                                    'save',
+                                    'delete'
                                 ],
                             }">
                         <mdt-header-row>
@@ -64,13 +65,18 @@
                             <mdt-column align-rule="right">Role</mdt-column>
                             <mdt-column align-rule="right">RFID</mdt-column>
                             <mdt-column align-rule="right">Save</mdt-column>
+                            <mdt-column align-rule="right">Delete</mdt-column>
                         </mdt-header-row>
                         <mdt-custom-cell html-content="true" column-key="RFID.RFID">
                             <input id="{{rowId}}" value="{{value}}">
                         </mdt-custom-cell>
                         <mdt-custom-cell column-key="save">
-                            <button style="margin-right: 0px;" ng-click="clientScope.showConfirm(rowId)"
+                            <button style="margin-right: 0px;" ng-click="clientScope.showConfirmSave(rowId)"
                                 class="md-button md-raised md-primary">Save</button>
+                        </mdt-custom-cell>
+                        <mdt-custom-cell column-key="delete">
+                            <button style="margin-right: 0px;" ng-click="clientScope.showConfirmDeleteUser(rowId)"
+                                class="md-button md-raised md-primary">Delete</button>
                         </mdt-custom-cell>
                     </mdt-table>
                 </div>
@@ -78,16 +84,22 @@
                     <mdt-table paginated-rows="{isEnabled: true, rowsPerPageValues: [5,10,20,50]}"
                         mdt-row-paginator="rfidCallback(page, pageSize)"
                         mdt-row-paginator-error-message="Error happened during loading nutritions." mdt-row="{
-                                        'table-row-id-key': 'fields.id',
+                                        'table-row-id-key': '_id',
                                         'column-keys': [
                                             'RFID',
-                                            'created_at'
+                                            'created_at',
+                                            'delete'
                                         ],
                                     }">
                         <mdt-header-row>
                             <mdt-column align-rule="left">RFID</mdt-column>
                             <mdt-column align-rule="right">Created at</mdt-column>
+                            <mdt-column align-rule="right">Delete</mdt-column>
                         </mdt-header-row>
+                        <mdt-custom-cell column-key="delete">
+                            <button style="margin-right: 0px;" ng-click="clientScope.showConfirmDeleteRFID(rowId)"
+                                class="md-button md-raised md-primary">Delete</button>
+                        </mdt-custom-cell>
 
                     </mdt-table>
                 </div>

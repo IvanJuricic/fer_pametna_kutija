@@ -46,7 +46,7 @@ module.exports = function (app) {
                 return done('jwt expired');
             }
             const userDocument = await UserModel.findOne({ username: jwtPayload.username }).exec();
-            return done(null, jwtPayload, userDocument.role);
+            return done(null, jwtPayload, userDocument);
         }
     ));
 

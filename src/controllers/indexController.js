@@ -14,11 +14,11 @@ var indexController = function () {
     var postRegister = async function (req, res) {
 
 
-        passport.authenticate('jwt', { session: false }, async function (err, user, role) {
+        passport.authenticate('jwt', { session: false }, async function (err, userFound, user) {
             if (err) { return next(err); }
             // Redirect if it fails
-            if (!user) { return res.redirect('/login'); }
-            switch (role) {
+            if (!userFound) { return res.redirect('/login'); }
+            switch (user.role) {
                 case 'ADMIN':
                     const { username, password } = req.body;
 
@@ -31,7 +31,7 @@ var indexController = function () {
                         const userDocument = new UserModel({ username, passwordHash });
                         await userDocument.save();
 
-                        return res.redirect('/user');
+                        return res.status(200).send('success');
 
                     } catch (error) {
                         console.log(error)

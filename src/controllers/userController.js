@@ -4,11 +4,11 @@ const path = require('path');
 
 var userController = function () {
     var getUser = function (req, res) {
-        passport.authenticate('jwt', { session: false }, function (err, user, role) {
+        passport.authenticate('jwt', { session: false }, function (err, userFound, user) {
             if (err) { res.redirect('/login'); }
             // Redirect if it fails
-            if (!user) { return res.redirect('/login'); }
-            switch (role) {
+            if (!userFound) { return res.redirect('/login'); }
+            switch (user.role) {
                 case 'ADMIN':
                     return res.sendFile(path.join(__dirname, '/../views/admin.html'));
                 case 'USER':

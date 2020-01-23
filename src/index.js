@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 const RFIDModel = require('./models/rfid');
 const UserModel = require('./models/user');
 const https = require('https')
+const DataModel = require('./models/data')
 
 
 
@@ -20,6 +21,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 const mongoose = require('./config/mongoose')();
 
+
+
 // bcrypt.hash("admin", 10).then(function (passwordHash) {
 //   try {
 //     const userDocument = new UserModel({ username: "admin@admin.com", passwordHash, role: "ADMIN" });
@@ -30,6 +33,9 @@ const mongoose = require('./config/mongoose')();
 //     console.log("admin user already exists");
 //   }
 // });
+
+const newData = new DataModel({mass: 0});
+newData.save();
 
 
 
@@ -45,10 +51,12 @@ sockets = [];
 const indexRouter = require('./routes/indexRoutes')();
 const userRouter = require('./routes/userRoutes')();
 const adminRouter = require('./routes/adminRoutes')(mongoose, sockets);
+const dataRouter = require('./routes/dataRoutes');
 
 app.use(('/'), indexRouter);
 app.use(('/user'), userRouter);
 app.use(('/admin'), adminRouter);
+app.use(('/data'), dataRouter);
 
 app.use(express.static(path.join(__dirname, '/../dist')));
 
@@ -76,7 +84,7 @@ var options = {
 };
 
 const PORT = 1337;
-const HOST = '192.168.43.134'
+const HOST = '10.130.195.197'
 
 tlsServer = tls.createServer(options, function (socket) {
   sockets.push(socket);

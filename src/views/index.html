@@ -1,4 +1,4 @@
-<html>
+<html ng-app="smart-box">
 
 <head>
   <title>Simple login</title>
@@ -6,6 +6,8 @@
   <link rel="stylesheet" type="text/css" href="/css/app.css">
   <script src="all.js"></script>
   <script src="/js/app.js"></script>
+  <script src="node_modules/chart.js/Chart.min.js"></script>
+  <script src="node_modules/angular-chart.js/dist/angular-chart.min.js"></script>
   <script>
     $(document).ready(function () {
       var user, pass;
@@ -45,6 +47,11 @@
     </div>
   </nav>
   <h1>Hello World!</h1>
+  <div ng-controller="BarCtrl">
+    <canvas id="bar" class="chart chart-bar" chart-data="data" chart-labels="labels" chart-series="series"></canvas>
+  </canvas>
+  </div>
+  
 </body>
 
 </html>

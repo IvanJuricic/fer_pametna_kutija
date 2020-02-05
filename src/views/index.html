@@ -6,8 +6,6 @@
   <link rel="stylesheet" type="text/css" href="/css/app.css">
   <script src="all.js"></script>
   <script src="/js/app.js"></script>
-  <script src="node_modules/chart.js/Chart.min.js"></script>
-  <script src="node_modules/angular-chart.js/dist/angular-chart.min.js"></script>
   <script>
     $(document).ready(function () {
       var user, pass;
@@ -24,7 +22,7 @@
   </script>
 </head>
 
-<body>
+<body ng-controller="BarCtrl">
   <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="#">Smart Box</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
@@ -41,17 +39,21 @@
           <a class="nav-link" href="/login">Login</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/user">User</a>
+          <a class="nav-link" href="/user">User</a>
         </li>
       </ul>
     </div>
   </nav>
-  <h1>Hello World!</h1>
-  <div ng-controller="BarCtrl">
+  <div style="width: 45%;margin: 25px;">
     <canvas id="bar" class="chart chart-bar" chart-data="data" chart-labels="labels" chart-series="series"></canvas>
-  </canvas>
+    </canvas>
   </div>
-  
+  <div style="width: 45%;margin: 25px;">
+    <canvas id="line" class="chart chart-line" chart-data="data_xy" chart-labels="labels_xy" chart-series="series_xy"
+      chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick">
+    </canvas>
+  </div>
+
 </body>
 
 </html>

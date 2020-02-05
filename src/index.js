@@ -7,7 +7,8 @@ const bcrypt = require('bcrypt');
 const RFIDModel = require('./models/rfid');
 const UserModel = require('./models/user');
 const https = require('https')
-const DataModel = require('./models/data')
+const DataModel1 = require('./models/load_cell1');
+const DataModel2 = require('./models/load_cell2');
 
 
 
@@ -34,8 +35,10 @@ const mongoose = require('./config/mongoose')();
 //   }
 // });
 
-const newData = new DataModel({mass: 0});
-newData.save();
+const newData1 = new DataModel1({mass: 5});
+newData1.save();
+const newData2 = new DataModel2({mass: 10});
+newData2.save();
 
 
 
@@ -44,7 +47,7 @@ sockets = [];
 const indexRouter = require('./routes/indexRoutes')();
 const userRouter = require('./routes/userRoutes')();
 const adminRouter = require('./routes/adminRoutes')(mongoose, sockets);
-const dataRouter = require('./routes/dataRoutes');
+const dataRouter = require('./routes/dataRoutes')(mongoose);
 
 app.use(('/'), indexRouter);
 app.use(('/user'), userRouter);
@@ -67,7 +70,7 @@ var options = {
 };
 
 const PORT = 1337;
-const HOST = '10.130.195.197'
+const HOST = '192.168.43.134'
 
 tlsServer = tls.createServer(options, function (socket) {
   sockets.push(socket);
@@ -121,6 +124,7 @@ tlsServer = tls.createServer(options, function (socket) {
 
   socket.on('data', function (data) {
     data = data.toString().replace(/(\n)/gm, "");
+    console.log(data);
     try {
       data = JSON.parse(data);
 

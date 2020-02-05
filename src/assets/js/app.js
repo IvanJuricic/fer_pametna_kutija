@@ -1,4 +1,6 @@
 "use strict";
+
+
 var app = angular.module('smart-box', ['ngMaterial', 'ngMessages', 'mdDataTable', 'chart.js']);
 
 app.config(function ($mdThemingProvider) {
@@ -185,12 +187,58 @@ app.controller('LoginController', function AdminController($scope, $http, $mdToa
     }
 });
 
-app.controller("BarCtrl", function ($scope) {
-    $scope.labels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
-    $scope.series = ['Series A', 'Series B'];
-  
-    $scope.data = [
+app.controller("BarCtrl", function ($scope, $http, $mdToast) {
 
+    var baseURL = window.location.protocol + '//' + window.location.host;
+
+    Chart.defaults.global.colors = ['#f7464a', '#4D5360', '#803690', '#46BFBD', '#FDB45C', '#949FB1', '#00ADF9'];
+    $scope.series = ['Load cell 1', 'Load cell 2'];
+    $scope.labels = ['Cabinet state'];
+
+    $scope.data = [
+        [],
+        []
     ];
-  });
-  
+
+    $scope.labels_xy = ["January", "February", "March", "April", "May", "June", "July"];
+    $scope.series_xy = ['Load cell 1', 'Load cell 2'];
+    $scope.data_xy = [
+        [65, 59, 80, 81, 56, 55, 40],
+    [28, 48, 40, 19, 86, 27, 90]
+    ];
+    $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
+    $scope.options = {
+        scales: {
+            yAxes: [
+                {
+                    id: 'y-axis-1',
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    beginAtZero: true
+                },
+                {
+                    id: 'y-axis-2',
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    beginAtZero: true
+                }
+            ]
+        }
+    };
+
+    function getBarData() {
+        $http.post(baseURL + "/data/getChanges", {
+            'limit': 1,
+        }).then(function (result) {
+            $scope.data[0] = [result.data.data1[0].mass];
+            $scope.data[1] = [result.data.data2[0].mass];
+            console.log(result.data);
+        }, function (err) {
+            var toastSettings = $mdToast.simple().content(err.data).position("bottom right");
+            $mdToast.show(toastSettings);
+        });;
+    }
+    getBarData();
+});

@@ -1,10 +1,9 @@
 var express = require('express');
 var dataRouter = express.Router();
-var dataController = require('../controllers/dataController')();
-
-var router = function () {
-    dataRouter.route('/getAllChanges')
-        .get(dataController.getAllChanges);
+var router = function (mongoose) {
+    var dataController = require('../controllers/dataController')(mongoose);
+    dataRouter.route('/getChanges')
+        .post(dataController.getChanges);
     return dataRouter;
 };
 

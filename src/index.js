@@ -35,10 +35,10 @@ const mongoose = require('./config/mongoose')();
 //   }
 // });
 
-const newData1 = new DataModel1({mass: 5});
-newData1.save();
-const newData2 = new DataModel2({mass: 10});
-newData2.save();
+// const newData1 = new DataModel1({ mass: 5 });
+// newData1.save();
+// const newData2 = new DataModel2({ mass: 10 });
+// newData2.save();
 
 
 
@@ -108,21 +108,21 @@ tlsServer = tls.createServer(options, function (socket) {
     socket.write(JSON.stringify(message));
     console.log(JSON.stringify(message));
   });
-  
+
   socket.on('file', function (args) {
     let message = {};
     message.type = 6;
-    message.file="";
+    message.file = "";
     console.log(args);
     args.forEach(RFID => {
-      message.file+=RFID.RFID;
+      message.file += RFID.RFID;
     });
-    message.length=message.file.length;
+    message.length = message.file.length;
     socket.write(JSON.stringify(message));
     console.log(JSON.stringify(message));
   });
 
-  socket.on('data', function (data) {
+  socket.on('data', async function (data) {
     data = data.toString().replace(/(\n)/gm, "");
     console.log(data);
     try {
@@ -134,13 +134,36 @@ tlsServer = tls.createServer(options, function (socket) {
           RFID.save();
           break;
         case "DATA":
-          console.log(data);
+          if (data.cell_id == "load_cell1") {
+            console.log(data.cell_id);
+            let rfid = await RFIDModel.findOne({ RFID: data.user }, { _id: 1, RFID: 1, created_at: 1 });
+            console.log(rfid);
+            if (rfid != null) {
+              let userToUpdate = await UserModel.findOne({ "RFID.RFID": rfid.RFID });
+              console.log(userToUpdate);
+              if (userToUpdate != null) {
+                const newData1 = new DataModel1({ mass: data.data, user: userToUpdate });
+                newData1.save();
+              }
+            }
+
+          } else if (data.cell_id == "load_cell2") {
+            let rfid = await RFIDModel.findOne({ RFID: data.user }, { _id: 1, RFID: 1, created_at: 1 });
+            if (rfid != null) {
+              let userToUpdate = await UserModel.findOne({ "RFID.RFID": rfid.RFID });
+              if (userToUpdate != null) {
+                const newData2 = new DataModel2({ mass: data.data, user: userToUpdate });
+                newData2.save();
+              }
+            }
+          }
           break;
         default:
           break;
       }
 
     } catch (error) {
+      console.log(error);
     }
 
   });

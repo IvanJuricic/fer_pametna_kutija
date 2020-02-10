@@ -5,3 +5,11 @@ p {
     color: dimgray;
   
   }
+.md-button.btn-dark.md-raised:not([disabled]):hover {
+    background-color: black;
+}
+
+.md-button.btn-dark.md-raised:not([disabled]) {
+  background-color: black;
+  color: white;
+}

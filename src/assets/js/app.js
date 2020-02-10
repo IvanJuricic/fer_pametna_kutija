@@ -200,32 +200,33 @@ app.controller("BarCtrl", function ($scope, $http, $mdToast) {
         []
     ];
 
-    $scope.labels_xy = ["January", "February", "March", "April", "May", "June", "July"];
+    $scope.labels_xy = [];
     $scope.series_xy = ['Load cell 1', 'Load cell 2'];
     $scope.data_xy = [
-        [65, 59, 80, 81, 56, 55, 40],
-    [28, 48, 40, 19, 86, 27, 90]
+        [],
+        []
     ];
-    $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
-    $scope.options = {
+    $scope.optionsGraph = {
         scales: {
-            yAxes: [
-                {
-                    id: 'y-axis-1',
-                    type: 'linear',
-                    display: true,
-                    position: 'left',
-                    beginAtZero: true
-                },
-                {
-                    id: 'y-axis-2',
-                    type: 'linear',
-                    display: true,
-                    position: 'right',
-                    beginAtZero: true
+            yAxes: [{ ticks: { beginAtZero: true, max:10 } }],
+            xAxes: [{
+                ticks: {
+                    display: false //this will remove only the label
                 }
-            ]
+            }]
         }
+        
+    };
+    $scope.optionsBar = {
+        scales: {
+            yAxes: [{ ticks: { beginAtZero: true, max:10  } }],
+            xAxes: [{
+                ticks: {
+                    display: false //this will remove only the label
+                }
+            }]
+        }
+        
     };
 
     function getBarData() {
@@ -240,5 +241,26 @@ app.controller("BarCtrl", function ($scope, $http, $mdToast) {
             $mdToast.show(toastSettings);
         });;
     }
+
+    function getGraphData() {
+        $http.post(baseURL + "/data/getChanges", {
+            'limit': 20,
+        }).then(function (result) {
+            result.data.data1.forEach(element => {
+                $scope.data_xy[0].push(element.mass);
+                $scope.labels_xy.push("User: " + element.user.username + ", time: " + element.created_at);
+            });
+            result.data.data2.forEach(element => {
+                $scope.data_xy[1].push(element.mass);
+            });
+            // $scope.data_xy[0] = [result.data.data1[0].mass];
+            // $scope.data_xy[1] = [result.data.data2[0].mass];
+            console.log(result.data);
+        }, function (err) {
+            var toastSettings = $mdToast.simple().content(err.data).position("bottom right");
+            $mdToast.show(toastSettings);
+        });;
+    }
     getBarData();
+    getGraphData();
 });

@@ -1,7 +1,7 @@
 <html ng-app="smart-box">
 
 <head>
-  <title>Simple login</title>
+  <title>Smart Box</title>
   <link rel="stylesheet" type="text/css" href="all.css">
   <link rel="stylesheet" type="text/css" href="/css/app.css">
   <script src="all.js"></script>
@@ -24,7 +24,7 @@
 
 <body ng-controller="BarCtrl">
   <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Smart Box</a>
+    <a class="navbar-brand" href="/">Smart Box</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
       aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -44,15 +44,44 @@
       </ul>
     </div>
   </nav>
-  <div style="width: 45%;margin: 25px;">
-    <canvas id="bar" class="chart chart-bar" chart-data="data" chart-labels="labels" chart-series="series"></canvas>
-    </canvas>
+  <div style="margin: 15px;" class="row">
+    <div class="col-12 col-xl-6">
+      <h2 style="margin-bottom: 15px;">Current cabinet state:</h2>
+      <canvas id="bar" class="chart chart-bar" chart-data="data" chart-labels="labels" chart-series="series"
+        chart-options="optionsBar"></canvas>
+      </canvas>
+    </div>
+    <div class="col-12 col-xl-6">
+      <h2 style="margin-bottom: 15px;">Cabinet state history:</h2>
+      <canvas id="line" class="chart chart-line" chart-data="data_xy" chart-labels="labels_xy" chart-series="series_xy"
+        chart-options="optionsGraph" chart-click="onClick">
+      </canvas>
+    </div>
   </div>
-  <div style="width: 45%;margin: 25px;">
-    <canvas id="line" class="chart chart-line" chart-data="data_xy" chart-labels="labels_xy" chart-series="series_xy"
-      chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick">
-    </canvas>
+  <div style="margin: 30px;" class="row">
+    <div class="col-12 offset-xl-3 col-xl-6">
+      <h2 style="margin-bottom: 15px;">About the project</h2>
+    </div>
+    <div class="col-12 offset-xl-3 col-xl-6">
+      <p>
+        Smart box project aims to create a technical solution that can transform an ordinary office cabinet into a
+        "smart"
+        cabinet, which allows inventory monitoring within it and gives access to inventory only to authorized users.
+      </p>
+    </div>
+    <div class="col-12 offset-xl-3 col-xl-3">
+      <h2 style="margin-bottom: 15px;">Checkout the code on Github</h2>
+    </div>
+    <div class="col-12 col-xl-3">
+      <button style="margin-left: 15px;" class="md-button md-raised btn-dark">Github Frontend</button>
+      <button style="margin-left: 15px;" class="md-button md-raised btn-dark">Github ESP32</button>
+    </div>
+    <div class="col-12 offset-xl-3 col-xl-3">
+      <h2 style="margin-bottom: 15px;">Technologies used:</h2>
+    </div>
+
   </div>
+
 
 </body>
 

@@ -1,5 +1,12 @@
 "use strict";
-
+$( document ).ready(function() {
+    $( ".person-holder" ).each(function() {
+        var cw = $( this ).width();
+        $( this ).css({
+            'height': cw + 'px'
+        });
+      });
+});
 
 var app = angular.module('smart-box', ['ngMaterial', 'ngMessages', 'mdDataTable', 'chart.js']);
 

@@ -5,11 +5,82 @@ p {
     color: dimgray;
   
   }
+  a{
+    color: white!important;
+  }
+.md-button.btn-dark.md-raised:not([disabled]) a {
+    color: white!important;
+}
 .md-button.btn-dark.md-raised:not([disabled]):hover {
     background-color: black;
+    color: white;
 }
 
 .md-button.btn-dark.md-raised:not([disabled]) {
   background-color: black;
   color: white;
+}
+
+.image-holder{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+.person-holder{
+  display: flex!important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  background-color: black;
+  border-radius: 50%;
+  display: inline-block;
+  width: 50%;
+  margin: 10px auto;
+  
+}
+.person{
+  width: 40%;
+  filter: invert(100%);
+}
+.person-holder h5{
+  color: white;
+}
+h2 {
+  margin-top: 15px;
+}
+
+.footer {
+  background: black;
+  color: white;
+}
+.footer .links ul {
+  list-style-type: none;
+}
+.footer .links li a {
+  color: white;
+  -webkit-transition: color 0.2s;
+  transition: color 0.2s;
+}
+.footer .links li a:hover {
+  text-decoration: none;
+  color: #4180cb;
+}
+.footer .about-company i {
+  font-size: 25px;
+}
+.footer .about-company a {
+  color: white;
+  -webkit-transition: color 0.2s;
+  transition: color 0.2s;
+}
+.footer .about-company a:hover {
+  color: #4180cb;
+}
+.footer .location i {
+  font-size: 18px;
+}
+.footer .copyright p {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }

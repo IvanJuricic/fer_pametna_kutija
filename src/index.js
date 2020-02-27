@@ -166,7 +166,7 @@ tlsServer = tls.createServer(options, function (socket) {
 
 });
 // Start listening on a specific port and address
-tlsServer.listen(PORT, HOST, function () {
+tlsServer.listen(PORT, function () {
 
   console.log("I'm listening at %s, on port %s", HOST, PORT);
 

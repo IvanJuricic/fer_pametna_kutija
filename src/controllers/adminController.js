@@ -8,7 +8,7 @@ var adminController = function (mongoose, sockets) {
             var userModel = mongoose.model('User');
             if (err) { return next(err); }
             // Redirect if it fails
-            if (!userFound) { return res.redirect('/login'); }
+            if (!userFound) { return res.redirect('/evidencija/login'); }
             switch (user.role) {
                 case 'ADMIN':
                     users = await userModel.find({}, { username: 1, role: 1, RFID: 1 });
@@ -28,7 +28,7 @@ var adminController = function (mongoose, sockets) {
 
             if (err) { return next(err); }
             // Redirect if it fails
-            if (!userFound) { return res.redirect('/login'); }
+            if (!userFound) { return res.redirect('/evidencija/login'); }
             switch (user.role) {
                 case 'ADMIN':
                     totalUsers = await userModel.find({}, {});
@@ -48,7 +48,7 @@ var adminController = function (mongoose, sockets) {
             var rfidModel = mongoose.model('RFID');
             if (err) { return next(err); }
             // Redirect if it fails
-            if (!userFound) { return res.redirect('/login'); }
+            if (!userFound) { return res.redirect('/evidencija/login'); }
             switch (user.role) {
                 case 'ADMIN':
                     totalRFIDs = await rfidModel.find({}, { RFID: 1, created_at: 1 });
@@ -70,7 +70,7 @@ var adminController = function (mongoose, sockets) {
 
             if (err) { return next(err); }
             // Redirect if it fails
-            if (!userFound) { return res.redirect('/login'); }
+            if (!userFound) { return res.redirect('/evidencija/login'); }
             switch (user.role) {
                 case 'ADMIN':
                     if (sockets.length < 1) {
@@ -113,7 +113,7 @@ var adminController = function (mongoose, sockets) {
             let rfidModel = mongoose.model('RFID');
 
             if (err) { return next(err); }
-            if (!userFound) { return res.redirect('/login'); }
+            if (!userFound) { return res.redirect('/evidencija/login'); }
             switch (user.role) {
                 case 'ADMIN':
                     console.log()
@@ -154,7 +154,7 @@ var adminController = function (mongoose, sockets) {
 
             if (err) { return next(err); }
             // Redirect if it fails
-            if (!userFound) { return res.redirect('/login'); }
+            if (!userFound) { return res.redirect('/evidencija/login'); }
             switch (user.role) {
                 case 'ADMIN':
                     if (sockets.length < 1) {

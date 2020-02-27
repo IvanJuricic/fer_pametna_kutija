@@ -14,7 +14,7 @@ var indexController = function () {
         passport.authenticate('jwt', { session: false }, async function (err, userFound, user) {
             if (err) { return next(err); }
             // Redirect if it fails
-            if (!userFound) { return res.redirect('/login'); }
+            if (!userFound) { return res.redirect('/evidencija/login'); }
             switch (user.role) {
                 case 'ADMIN':
                     const { username, password } = req.body;

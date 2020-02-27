@@ -33,7 +33,7 @@ app.controller('AdminController', function AdminController($scope, $http, $mdToa
         email: "",
         password: ""
     };
-    var baseURL = window.location.protocol + '//' + window.location.host;
+    var baseURL = window.location.protocol + '//' + window.location.host + "/evidencija";
 
     function userCallback(page, pageSize) {
         var offset = (page - 1) * pageSize;
@@ -174,7 +174,7 @@ app.controller('LoginController', function AdminController($scope, $http, $mdToa
         email: "",
         password: ""
     };
-    var baseURL = window.location.protocol + '//' + window.location.host;
+    var baseURL = window.location.protocol + '//' + window.location.host + "/evidencija";
     function loginUser() {
         $http.post(baseURL + "/login/", {
             'username': $scope.user.email,
@@ -196,7 +196,7 @@ app.controller('LoginController', function AdminController($scope, $http, $mdToa
 
 app.controller("BarCtrl", function ($scope, $http, $mdToast) {
 
-    var baseURL = window.location.protocol + '//' + window.location.host;
+    var baseURL = window.location.protocol + '//' + window.location.host + "/evidencija";
 
     Chart.defaults.global.colors = ['#f7464a', '#4D5360', '#803690', '#46BFBD', '#FDB45C', '#949FB1', '#00ADF9'];
     $scope.series = ['Load cell 1', 'Load cell 2'];

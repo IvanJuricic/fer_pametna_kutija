@@ -31,7 +31,7 @@ try{
         console.log("admin user created");
       });
   
-    } catch{
+    }catch{
       console.log("admin user already exists");
     }
   });

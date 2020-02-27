@@ -23,23 +23,13 @@ app.use(bodyParser.json());
 const mongoose = require('./config/mongoose')();
 
 
-try{
-  bcrypt.hash("admin", 10).then(function (passwordHash) {
-    try {
-      const userDocument = new UserModel({ username: "admin@admin.com", passwordHash, role: "ADMIN" });
-      userDocument.save().catch(()=>{
-        console.log("admin user created");
-      });
-  
-    }catch{
-      console.log("admin user already exists");
-    }
+bcrypt.hash("admin", 10).then(function (passwordHash) {
+  const userDocument = new UserModel({ username: "admin@admin.com", passwordHash, role: "ADMIN" });
+  userDocument.save().catch(() => {
+    console.log("admin user created");
   });
+});
 
-}catch{
-  console.log("admin user already exists");
-
-}
 
 // const newData1 = new DataModel1({ mass: 5 });
 // newData1.save();
@@ -62,9 +52,9 @@ app.use(('/data'), dataRouter);
 
 app.use(express.static(path.join(__dirname, '/../dist')));
 
- app.listen(8000, function () {
-    console.log('Example app listening on port 8000! Go to http://localhost:8000/')
-  });
+app.listen(8000, function () {
+  console.log('Example app listening on port 8000! Go to http://localhost:8000/')
+});
 
 var options = {
   key: fs.readFileSync(__dirname + '/private-key.pem'),

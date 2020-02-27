@@ -23,17 +23,23 @@ app.use(bodyParser.json());
 const mongoose = require('./config/mongoose')();
 
 
+try{
+  bcrypt.hash("admin", 10).then(function (passwordHash) {
+    try {
+      const userDocument = new UserModel({ username: "admin@admin.com", passwordHash, role: "ADMIN" });
+      userDocument.save().catch(()=>{
+        console.log("admin user created");
+      });
+  
+    } catch{
+      console.log("admin user already exists");
+    }
+  });
 
-// bcrypt.hash("admin", 10).then(function (passwordHash) {
-//   try {
-//     const userDocument = new UserModel({ username: "admin@admin.com", passwordHash, role: "ADMIN" });
-//     userDocument.save();
-//     console.log("admin user created");
+}catch{
+  console.log("admin user already exists");
 
-//   } catch{
-//     console.log("admin user already exists");
-//   }
-// });
+}
 
 // const newData1 = new DataModel1({ mass: 5 });
 // newData1.save();

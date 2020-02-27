@@ -57,7 +57,7 @@ app.use(('/data'), dataRouter);
 app.use(express.static(path.join(__dirname, '/../dist')));
 
  app.listen(8000, function () {
-    console.log('Example app listening on port 8000! Go to https://localhost:8000/')
+    console.log('Example app listening on port 8000! Go to http://localhost:8000/')
   });
 
 var options = {

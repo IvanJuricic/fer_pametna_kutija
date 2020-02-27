@@ -56,11 +56,7 @@ app.use(('/data'), dataRouter);
 
 app.use(express.static(path.join(__dirname, '/../dist')));
 
-https.createServer({
-  key: fs.readFileSync(__dirname + '/server.key'),
-  cert: fs.readFileSync(__dirname + '/server.cert')
-}, app)
-  .listen(8000, function () {
+ app.listen(8000, function () {
     console.log('Example app listening on port 8000! Go to https://localhost:8000/')
   });
 

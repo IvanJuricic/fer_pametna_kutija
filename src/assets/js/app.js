@@ -181,7 +181,7 @@ app.controller('LoginController', function AdminController($scope, $http, $mdToa
             'password': $scope.user.password,
         }).then(function (message) {
             if (message.data == "authenticated") {
-                $window.location.href = '/user';
+                $window.location.href = '/evidencija/user';
             }
         }, function (err) {
             var toastSettings = $mdToast.simple().content(err.data).position("bottom right");
